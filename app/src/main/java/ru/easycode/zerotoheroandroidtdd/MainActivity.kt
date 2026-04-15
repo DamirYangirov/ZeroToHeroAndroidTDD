@@ -1,18 +1,21 @@
 package ru.easycode.zerotoheroandroidtdd
 
 import android.annotation.SuppressLint
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.google.android.material.internal.TextScale
+import java.io.Serializable
 
 class MainActivity : AppCompatActivity() {
 
 
     lateinit var linearLayout: LinearLayout
     lateinit var textView: TextView
+    lateinit var state: State
     companion object{
         val KEY = "key"
     }
@@ -25,20 +28,43 @@ class MainActivity : AppCompatActivity() {
         textView = findViewById<TextView>(R.id.titleTextView)
         linearLayout = findViewById<LinearLayout>(R.id.rootLayout)
 
+        state = State.Initial
         button.setOnClickListener {
-            linearLayout.removeView(textView)
+            state = State.Removed
+            state.apply(textView, linearLayout)
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putInt(KEY, linearLayout.childCount)
+        outState.putSerializable(KEY, state)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        if (savedInstanceState.getInt(KEY) <2){
+        state = savedInstanceState.getSerializable(KEY) as State
+        state.apply(textView, linearLayout)
+    }
+}
+
+interface  State: Serializable{
+    fun apply (textView: TextView, linearLayout: LinearLayout)
+    object Initial: State {
+        override fun apply(
+            textView: TextView,
+            linearLayout: LinearLayout,
+        ): Unit {
+        }
+    }
+
+    object Removed: State {
+        override fun apply(
+            textView: TextView,
+            linearLayout: LinearLayout,
+        ) {
             linearLayout.removeView(textView)
         }
     }
+
+
 }
