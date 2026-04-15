@@ -13,10 +13,9 @@ class MainActivity : AppCompatActivity() {
         const val KEY = "Visible"
 
     }
-
     lateinit var button: Button
     lateinit var textView: TextView
-    var isVisibile = true
+
 
 
     @SuppressLint("MissingInflatedId")
@@ -29,10 +28,8 @@ class MainActivity : AppCompatActivity() {
 
         button.setOnClickListener {
             textView.visibility = View.INVISIBLE
-            isVisibile = false
-            Log.e("TAG", "setOnClickListener: $isVisibile ", )
         }
-        Log.e("onCreate", "onCreate: $isVisibile ", )
+
 
     }
 
@@ -40,17 +37,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putBoolean(KEY, isVisibile)
-        Log.e("onSaveInstanceState", isVisibile.toString())
+        outState.putInt(KEY, textView.visibility)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-            isVisibile = savedInstanceState.getBoolean(KEY)
-        if(!isVisibile){
-            textView.visibility = View.INVISIBLE
-        }
-        Log.e("onRestoreInstanceState", isVisibile.toString())
+            textView.visibility = savedInstanceState.getInt(KEY)
 
     }
 }
