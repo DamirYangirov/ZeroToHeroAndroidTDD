@@ -11,41 +11,25 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var button: Button
     lateinit var textView: TextView
-    lateinit var mathOperation: MathOperation
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        val count =  Count.Base(2)
         button = findViewById(R.id.incrementButton)
         textView = findViewById(R.id.countTextView)
 
-        mathOperation = MathOperation.Initial
+
 
         button.setOnClickListener {
-            mathOperation = MathOperation.Increment
-            mathOperation.increment(textView)
-        }
-    }
-}
+            val digit = textView.text.toString()
+            val string =  count.increment(digit)
 
-interface MathOperation: Serializable{
-    companion object{
-        const val number = 2
-    }
-    fun increment(textView: TextView)
-    object Initial: MathOperation {
-        override fun increment(textView: TextView) {
-
+            textView.text = string
         }
 
-    }
-    object Increment: MathOperation {
-        override fun increment(textView: TextView) {
 
-            val count = textView.text.toString().toInt()
-            textView.text =(count+number).toString()
-        }
     }
-
 }
